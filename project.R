@@ -18,6 +18,6 @@ clean <- function(corpus)
 }
 
 #Create an American and UK corpus
+#trying to create a merge conflict
 american_corpus <- clean(download_src(american_id))
 uk_corpus <- clean(download_src(uk_id))
-
