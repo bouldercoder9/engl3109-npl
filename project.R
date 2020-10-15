@@ -51,6 +51,7 @@ view_Bing_Sentiment <- function(corpus)
   return(temp)
 }
 
+<<<<<<< HEAD
 ###########################
 ## Corpus Work
 ###########################
@@ -71,3 +72,7 @@ uk_sentiment <- view_Bing_Sentiment(uk_corpus)
 
 
 
+=======
+american_corpus <- clean(download_src(american_id))
+uk_corpus <- clean(download_src(uk_id))
+>>>>>>> 8e8109b57661c34f92264d973d97811cdd8fbfeb
