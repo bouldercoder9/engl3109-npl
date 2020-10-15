@@ -40,7 +40,6 @@ view_Top_Occurences <- function(corpus)
   return(sorted)
 }
 
-#Return the lowest ten sentiment novels
 view_Bing_Sentiment <- function(corpus)
 {
   temp <- corpus%>%
@@ -48,23 +47,7 @@ view_Bing_Sentiment <- function(corpus)
     count(index = gutenberg_id, sentiment)%>%
     spread(sentiment, n)%>%
     mutate(sentiment = positive - negative)%>%
-    top_n(-10)%>%
     arrange(sentiment, .by_group = TRUE)
-  return(temp)
-}
-
-#Return the top 15 negative and positive words in a corpora
-get_Contributing_Negative_Words <- function(corpus)
-{
-  temp <- corpus%>%
-    inner_join(BING)%>%
-    count(word, sentiment)%>%
-    group_by(sentiment)%>%
-    top_n(15)%>%
-    ungroup()%>%
-    mutate(word = reorder(word,n))%>%
-    group_by(sentiment)%>%
-    arrange(desc(n), .by_group = TRUE)
   return(temp)
 }
 
@@ -76,14 +59,19 @@ get_Contributing_Negative_Words <- function(corpus)
 american_corpus <- clean(download_src(american_id))
 uk_corpus <- clean(download_src(uk_id))
 
+
 #View each corpus
 american_words <- view_Top_Occurences(american_corpus)
 uk_words <- view_Top_Occurences(uk_corpus)
   
-#Create each corpus sentiment
 american_sentiment <- view_Bing_Sentiment(american_corpus)
 uk_sentiment <- view_Bing_Sentiment(uk_corpus)
 
-#View top 15 contributing words to BING sentiment
-american__word_sentiment <- get_Contributing_Negative_Words(american_corpus)
-uk_word_sentiment <- get_Contributing_Negative_Words(uk_corpus)
+american_corpus <- clean(download_src(american_id))
+uk_corpus <- clean(download_src(uk_id))
+
+# To find the total sentiment we calculated the sum of the sentiment columns that we generated earlier 
+# To achieve this we are using the sum function and then specifying which variable to pull from and using the $ to specify which column to pull from for the sums
+american_total_sentiment = sum(american_sentiment$sentiment)
+uk_total_sentiment = sum(uk_sentiment$sentiment)
+
