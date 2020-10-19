@@ -51,6 +51,21 @@ view_Bing_Sentiment <- function(corpus)
   return(temp)
 }
 
+#Return the top 15 negative and positive words in a corpora
+get_Contributing_Negative_Words <- function(corpus)
+{
+  temp <- corpus%>%
+    inner_join(BING)%>%
+    count(word, sentiment)%>%
+    group_by(sentiment)%>%
+    top_n(15)%>%
+    ungroup()%>%
+    mutate(word = reorder(word,n))%>%
+    group_by(sentiment)%>%
+    arrange(desc(n), .by_group = TRUE)
+  return(temp)
+}
+
 ###########################
 ## Corpus Work
 ###########################
@@ -74,6 +89,10 @@ uk_corpus <- clean(download_src(uk_id))
 # To achieve this we are using the sum function and then specifying which variable to pull from and using the $ to specify which column to pull from for the sums
 american_total_sentiment = sum(american_sentiment$sentiment)
 uk_total_sentiment = sum(uk_sentiment$sentiment)
+
+#View top 15 contributing words to BING sentiment
+american__word_sentiment <- get_Contributing_Negative_Words(american_corpus)
+uk_word_sentiment <- get_Contributing_Negative_Words(uk_corpus)
 
 
 
