@@ -43,6 +43,7 @@ view_Top_Occurences <- function(corpus)
   return(sorted)
 }
 
+#Get the sentiment (this ended up being for BING only)
 get_Sentiment <- function(corpus, lexicon)
 {
   temp <- corpus%>%
@@ -166,6 +167,7 @@ uk_AFINN_sentiment <- get_AFINN_Sentiment(uk_corpus, AFINN)
 ## ggplot
 ###########################
 
+#Plot for most common words
 ggplot() +
   geom_col(data=us_words, aes(x=word, y=n), color='green', alpha = 0.6) + 
   geom_col(data=uk_words, aes(x=word, y=n), color='red', alpha = 0.6) +
@@ -173,6 +175,7 @@ ggplot() +
   ylab("Number of Occurences") +
   theme(axis.text.x = element_text(angle = 45, vjust = 0.9, hjust=1))
 
+#Plot for BING sentiment
 ggplot() +
   geom_line(data=us_BING_sentiment, aes(x=c(1,2,3,4,5,6,7,8,9,10), y=sentiment), color='green', alpha = 0.6) + 
   geom_line(data=uk_BING_sentiment, aes(x=c(1,2,3,4,5,6,7,8,9,10), y=sentiment), color='red', alpha = 0.6) +
@@ -180,6 +183,7 @@ ggplot() +
   ylab("Sentiment") +
   scale_x_continuous(breaks=c(1,2,3,4,5,6,7,8,9,10))
 
+#Plot for negatively contributing words (BING)
 ggplot() +
   geom_col(data=filter(us_word_sentiment, sentiment == "negative"), aes(x=word, y=n), color='green', alpha = 0.6) + 
   geom_col(data=filter(uk_word_sentiment, sentiment == "negative"), aes(x=word, y=n), color='red', alpha = 0.6) +
@@ -187,6 +191,7 @@ ggplot() +
   ylab("Number of Occurences") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
+#Plot for positively contributing words (BING)
 ggplot() +
   geom_col(data=filter(us_word_sentiment, sentiment == "positive"), aes(x=word, y=n), color='green', alpha = 0.6) + 
   geom_col(data=filter(uk_word_sentiment, sentiment == "positive"), aes(x=word, y=n), color='red', alpha = 0.6) +
@@ -194,7 +199,7 @@ ggplot() +
   ylab("Number of Occurences") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
-
+#Plot for joy words
 ggplot() +
   geom_col(data=us_joy_count, aes(x=word, y=n), color='green', alpha = 0.6) + 
   geom_col(data=uk_joy_count, aes(x=word, y=n), color='red', alpha = 0.6) +
@@ -202,57 +207,26 @@ ggplot() +
   ylab("Number of Occurences") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
-us_joy_gg <- us_joy_count%>%
-  mutate(word=reorder(word,n))%>%
-  ggplot()+
-  aes(word,y=n)+
-  geom_col()+
-  xlab("Word")+
-  ylab("Number of occurrences")
-us_joy_gg
+#Plot for anger words
+ggplot() +
+  geom_col(data=us_anger_count, aes(x=word, y=n), color='green', alpha = 0.6) + 
+  geom_col(data=uk_anger_count, aes(x=word, y=n), color='red', alpha = 0.6) +
+  xlab("Words") +
+  ylab("Number of Occurences") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
-uk_joy_gg <- uk_joy_count%>%
-  mutate(word=reorder(word,n))%>%
-  ggplot()+
-  aes(word,y=n)+
-  geom_col()+
-  xlab("Word")+
-  ylab("Number of occurrences")
-uk_joy_gg
+#Plot for negative AFINN sentiment
+ggplot() +
+  geom_line(data=slice_max(us_AFINN_sentiment, desc(sentiment), n=5), aes(x=c(1,2,3,4,5), y=sentiment), color='green', alpha = 0.6) + 
+  geom_line(data=slice_max(uk_AFINN_sentiment, desc(sentiment), n=5), aes(x=c(1,2,3,4,5), y=sentiment), color='red', alpha = 0.6) +
+  xlab("Rank") +
+  ylab("Sentiment") +
+  scale_x_continuous(breaks=c(1,2,3,4,5))
 
-us_anger_gg <- us_anger_count%>%
-  mutate(word=reorder(word,n))%>%
-  ggplot()+
-  aes(word,y=n)+
-  geom_col()+
-  xlab("Word")+
-  ylab("Number of occurrences")
-us_anger_gg
-
-uk_anger_gg <- uk_anger_count%>%
-  mutate(word=reorder(word,n))%>%
-  ggplot()+
-  aes(word,y=n)+
-  geom_col()+
-  xlab("Word")+
-  ylab("Number of occurrences")
-uk_anger_gg
-
-# AFINN 
-ggplot(data = us_AFINN_sentiment[1:5,])+
-  aes(x=gutenberg_id, y=sentiment)+
-  geom_col()
-ggplot(data = us_AFINN_sentiment[16:20,])+
-  aes(x=gutenberg_id, y=sentiment)+
-  geom_col()
-
-ggplot(data = uk_AFINN_sentiment[1:15,])+
-  aes(x=gutenberg_id, y=sentiment)+
-  geom_col()
-
-ggplot(data = uk_AFINN_sentiment[16:20,])+
-  aes(x=gutenberg_id, y=sentiment)+
-  geom_col()
-ggplot() + 
-  geom_col(data=us_words, aes(x=word, y=n), color='green', alpha = 0.6) + 
-  geom_col(data=uk_words, aes(x=word, y=n), color='red', alpha = 0.6)
+#Plot for positive AFINN sentiment
+ggplot() +
+  geom_line(data=slice_min(us_AFINN_sentiment, desc(sentiment), n=5), aes(x=c(1,2,3,4,5), y=sentiment), color='green', alpha = 0.6) + 
+  geom_line(data=slice_min(uk_AFINN_sentiment, desc(sentiment), n=5), aes(x=c(1,2,3,4,5), y=sentiment), color='red', alpha = 0.6) +
+  xlab("Rank") +
+  ylab("Sentiment") +
+  scale_x_continuous(breaks=c(1,2,3,4,5))
