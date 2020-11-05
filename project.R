@@ -9,8 +9,10 @@ library(ggplot2)
 #######################
 
 #Create an American and UK list of book ID's
-us_id <- scan("american_corpus")
-uk_id <- scan("uk_corpus")
+#us_id <- scan("american_corpus")
+#uk_id <- scan("uk_corpus")
+us_id <- c(203, 14107, 514, 25344, 2701, 624, 76, 74, 205, 8188, 53071, 73, 2870, 46650, 165, 9839, 24, 3285, 41, 21255)
+uk_id <- c(42324, 1260, 174, 98, 244, 768, 11, 730, 1400, 9182, 36, 35, 145, 153, 583, 5658, 120, 4276, 3409, 3760)
 
 #Create our stop words SMART and BING set
 data("stop_words")
